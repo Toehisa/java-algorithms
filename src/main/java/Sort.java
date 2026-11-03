@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Sort<T extends Comparable<T>> {
     public void bubbleSort(T[] arr) {
         int size = arr.length - 1;
@@ -38,6 +40,46 @@ public class Sort<T extends Comparable<T>> {
             }
         }
     }
+
+    public void mergeSort(T[] arr) {
+        int length = arr.length;
+
+        if (length < 2) {
+            return;//выход из рекурсии когда остался 1 элемент
+        }
+
+        int mid = length / 2;
+        //int mid = (low + high) >>> 1; или так
+
+        T[] first = Arrays.copyOfRange(arr, 0, mid);//пилим на пополам
+        mergeSort(first);//и отправляем в рекурсию
+
+        T[] second = Arrays.copyOfRange(arr, mid, length);//пилим на пополам
+        mergeSort(second);//и отправляем в рекурсию
+
+        merge(arr, first, second);//Склеиваем куски в исходный массив
+    }
+
+
+    private void merge(T[] arr, T[] first, T[] second) {
+        int i, j, k;
+        i = j = k = 0;
+
+        int fLength = first.length;
+        int sLength = second.length;
+
+        while (i < fLength && j < sLength) {
+            if (first[i].compareTo(second[j]) <= 0) {
+                arr[k++] = first[i++];
+            } else {
+                arr[k++] = second[j++];
+            }
+        }
+
+        while (i < fLength) arr[k++] = first[i++];
+        while (j < sLength) arr[k++] = second[j++];
+    }
+
 
     private void insertAndShift(T[] arr, int left, int right) {
         T itemToInsert = arr[right];
