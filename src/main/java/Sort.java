@@ -60,6 +60,67 @@ public class Sort<T extends Comparable<T>> {
         merge(arr, first, second);//Склеиваем куски в исходный массив
     }
 
+    public void quickSort(T[] arr) {
+        if (arr == null || arr.length == 0) return;
+        quickSort(arr, 0, arr.length - 1);
+    }
+
+    private void quickSort(T[] arr, int left, int right) {
+        if (left >= right) return;//выход из рекурсии
+
+        int mid = (left + right) >>> 1;
+        T pivot = arr[mid];
+
+        swapPivotAndLast(arr, mid, right);//Пивот в конец
+
+        int pivotInsertionIdx = partition(arr, pivot, left, right);//свап элементов и получение индекса для пивота
+
+        swapLastAndPivot(arr, right, pivotInsertionIdx);//Пивот в нужную позицию
+
+        //рекурсия исключая сам пивот
+        quickSort(arr, left, pivotInsertionIdx - 1);
+        quickSort(arr, pivotInsertionIdx + 1, right);
+    }
+
+    private int partition(T[] arr, T pivot, int left, int right) {
+        int i = left;
+        int j = right - 1; // Начинаем перед спрятанным пивотом
+
+        while (i <= j) {
+            // Ищем слева элемент, который больше либо равен пивоту
+            while (i <= j && arr[i].compareTo(pivot) < 0) {
+                i++;
+            }
+            // Ищем справа элемент, который меньше либо равен пивоту
+            while (i <= j && arr[j].compareTo(pivot) > 0) {
+                j--;
+            }
+
+            // Если указатели не пересеклись — меняем элементы местами
+            if (i <= j) {
+                swap(arr, i, j);
+                i++;
+                j--;
+            }
+        }
+
+        // Указатель 'i' всегда остановится ровно там, куда нужно вставить пивот
+        return i;
+    }
+
+    private void swap(T[] arr, int idx1, int idx2) {
+        T buffer = arr[idx1];
+        arr[idx1] = arr[idx2];
+        arr[idx2] = buffer;
+    }
+
+    private void swapPivotAndLast(T[] arr, int idx1, int idx2) {
+        swap(arr, idx1, idx2);
+    }
+
+    private void swapLastAndPivot(T[] arr, int idx1, int idx2) {
+        swap(arr, idx1, idx2);
+    }
 
     private void merge(T[] arr, T[] first, T[] second) {
         int i, j, k;
@@ -79,7 +140,6 @@ public class Sort<T extends Comparable<T>> {
         while (i < fLength) arr[k++] = first[i++];
         while (j < sLength) arr[k++] = second[j++];
     }
-
 
     private void insertAndShift(T[] arr, int left, int right) {
         T itemToInsert = arr[right];
