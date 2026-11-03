@@ -29,6 +29,8 @@ public class Search<T extends Comparable<T>> {
 
     //Поиск границы (Первое вхождение)
     public T binarySearch2(T[] arr, T target) {
+        if (isEmpty(arr)) return null;
+
         int right = arr.length - 1;
         int left = 0;
 
@@ -42,23 +44,36 @@ public class Search<T extends Comparable<T>> {
             }
         }
 
+        //цикл закончился (left == right). Проверяем этот элемент!
+        if (arr[left].equals(target)) {
+            return arr[left];
+        }
         return null;
     }
 
     //Поиск соседних элементов
     public T binarySearch3(T[] arr, T target) {
-        int left = 0, right = arr.length - 1;
+        if (isEmpty(arr)) return null;
+
+        int right = arr.length - 1;
+        int left = 0;
+
         while (left + 1 < right) {
             int mid = (left + right) >>> 1;
+
             if (arr[mid].compareTo(target) > 0) {
-                right = mid; // Сужаем прямо до mid
+                right = mid;
             } else {
-                left = mid;  // Сужаем прямо до mid
+                left = mid;
             }
         }
         //Оставшиеся два элемента
         if (arr[left].equals(target)) return arr[left];
         if (arr[right].equals(target)) return arr[right];
         return null;
+    }
+
+    private boolean isEmpty(T[] arr) {
+        return arr == null || arr.length == 0;
     }
 }
