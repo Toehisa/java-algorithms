@@ -17,4 +17,35 @@ public class Sort<T extends Comparable<T>> {
             size--;
         } while (swaped);
     }
+
+    public void insertSort(T[] arr) {
+        if (arr == null || arr.length < 2) return;
+
+        var length = arr.length;
+
+        for (int sorted = 0, unsorted = 1; unsorted < length;) {
+            if (arr[sorted].compareTo(arr[unsorted]) > 0) {
+                insertAndShift(arr, sorted, unsorted);
+                unsorted++;
+                sorted = 0;
+            } else {
+                sorted++;
+            }
+
+            if (sorted == unsorted) {
+                sorted = 0;
+                unsorted++;
+            }
+        }
+    }
+
+    private void insertAndShift(T[] arr, int left, int right) {
+        T itemToInsert = arr[right];
+
+        for (; right > left; right--) {
+            arr[right] = arr[right - 1];
+        }
+
+        arr[left] = itemToInsert;
+    }
 }
